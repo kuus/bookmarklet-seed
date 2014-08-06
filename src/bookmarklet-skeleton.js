@@ -63,9 +63,8 @@
   /**
    * Load jQuery
    * Adapted from here: http://stackoverflow.com/questions/10113366/load-jquery-with-javascript-and-use-jquery
-   * @param  {String} url of jquery, as absolute path
-   * @param  {Function} callback on jquery ready
-   * @return {void}
+   * @param {string} url of jquery, as absolute path
+   * @param {Function} callback on jquery ready
    */
   function loadJquery(url, onReady) {
     // regex to get only number comman and dots
@@ -109,9 +108,8 @@
 
   /**
    * Load js files, use jquery
-   * @param  {Array} paths of js files
-   * @param  {Function} callback called when all scripts are loaded
-   * @return {void}
+   * @param {Array} paths of js files
+   * @param {Function} callback called when all scripts are loaded
    */
   function loadScripts(paths, callback) {
     var received = 0;
@@ -129,8 +127,7 @@
 
   /**
    * Load css files
-   * @param  {Array} paths of css files
-   * @return {void}
+   * @param {Array} paths of css files
    */
   function loadStyles(paths, callback) {
     var head = document.getElementsByTagName('head')[0];
@@ -146,8 +143,7 @@
   /**
    * Inject css rules
    * as seen here: http://stackoverflow.com/a/524721
-   * @param  {String} css as a string
-   * @return {void}
+   * @param {string} css as a string
    */
   function injectCss(css) {
     var head = document.head || document.getElementsByTagName('head')[0],
@@ -165,8 +161,7 @@
    * Prevent the default behavior of passing
    * the scroll event to parent scrollable areas.
    * Adapted from: http://stackoverflow.com/a/16324762
-   * @param  {Object} event
-   * @return {void}
+   * @param {Object} event
    */
   function preventScrollBubbling(event) {
     var scrollTop = this.scrollTop,
@@ -193,12 +188,15 @@
     }
   }
 
-  var myBookmarklet = function myBookmarklet() {
+  var Bookmarklet = function Bookmarklet() {
     this.initialize.apply(this, arguments);
   };
 
-  // Prototype
-  myBookmarklet.prototype = {
+  /**
+   * The bookmarklet prototype
+   * @type {Object}
+   */
+  Bookmarklet.prototype = {
 
     initialize: function() {
       var self = this;
@@ -286,6 +284,7 @@
         containment: '#' + cageId,
         maxWidth: 768,
         minWidth: minWidth,
+        minHeight: header.offsetHeight,
         handles: 'all',
         snap: '#' + cageId,
         snapTolerance: 20,
@@ -297,21 +296,21 @@
       .on('DOMMouseScroll mousewheel', preventScrollBubbling);
     },
     bindControls: function() {
-      var self = this;
-      $(controlClose).on('click', self.destroy);
-      $(controlToggle).on('click', self.toggle);
-      $(header).on('dblclick', self.toggle);
+      $(controlClose).on('click', $.proxy(this.destroy, this));
+      $(controlToggle).on('click', $.proxy(this.toggle, this));
+      $(header).on('dblclick', $.proxy(this.toggle, this));
     },
-    toggle: function() {
+    toggle: function(event) {
+      var $element = $(event.target);
       if(this.minimized) {
         wrapper.style.width = this.size.width + 'px';
         wrapper.style.height = this.size.height + 'px';
-        this.className += ' UNIQUEID-control-open';
+        $element.addClass('UNIQUEID-control-toggle-open');
         this.minimized = false;
       } else {
         wrapper.style.height = header.offsetHeight + 'px';
         wrapper.style.width = DEFAULT_WIDTH + 'px';
-        this.className = 'UNIQUEID-control';
+        $element.removeClass('UNIQUEID-control-toggle-open');
         this.minimized = true;
       }
     },
@@ -323,6 +322,7 @@
     }
   };
 
-  window['UNIQUEID'] = new myBookmarklet();
+  // Expose the Bookmarklet
+  window['UNIQUEID'] = new Bookmarklet();
 
 })(window, document);

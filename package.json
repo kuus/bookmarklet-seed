@@ -1,7 +1,7 @@
 {
   "name": "bookmarklet-seed",
   "version": "0.0.1",
-  "description": "Seed to easily start and develop a draggable and resizable bookmarklet.",
+  "description": "Seed to easily start and develop a draggable and resizable bookmarklet. Using gulp to help the workflow.",
   "homepage": "http://github.com/kuus/bookmarklet-seed",
   "author": "kuus <kunderikuus@gmail.com> (http://github.com/kuus/)",
   "license": "MIT",
@@ -14,7 +14,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "browser-sync": "~0.9.1",
+    "browser-sync": "^1.3.3",
     "gulp": "^3.8.6",
     "gulp-autoprefixer": "^0.0.6",
     "gulp-cache": "~0.1.11",

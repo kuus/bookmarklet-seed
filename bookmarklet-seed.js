@@ -1,4 +1,13 @@
 /**
+ * bookmarklet-seed v0.0.1
+ * http://github.com/kuus/bookmarklet-seed
+ *
+ * Seed to easily start and develop a draggable and resizable bookmarklet. Using gulp to help the workflow.
+ *
+ * Copyright (c) 2014 kuus <kunderikuus@gmail.com> (http://github.com/kuus/)
+ * Released under MIT License
+ */
+/**
  * Bookmarklet seed
  *
  * @author kuus <kunderikuus@gmail.com> (http://kunderikuus.net)
@@ -56,16 +65,15 @@
    * Injectables
    * kind of external resource, filled by gulp tasks
    */
-  var injectableTemplates = '<div id="kuus-cage"></div><div id="kuus-wrapper"><div id="kuus-wrap" class="kuus-cover"><div id="kuus-header"><div id="kuus-controls"><span id="kuus-control-close" class="kuus-control">x</span> <span id="kuus-control-toggle" class="kuus-control">-</span></div><h1 id="kuus-title">Bookmarklet</h1></div><div id="kuus-container"><div id="kuus-iframe-wrap" class="kuus-cover"><iframe id="kuus-iframe-app" name="kuus-iframe-app" src="javascript:false;" scrolling="0" frameborder="0" sandbox="allow-scripts allow-same-origin" seamless=""></iframe><div id="kuus-iframe-overlay" class="kuus-cover"></div></div></div></div></div>';
-  var injectableStyles = '#kuus-cage{z-index:-1;position:fixed;top:0;left:0;bottom:0;right:0;pointer-events:none}#kuus-wrapper{z-index:9999999999;position:fixed!important;top:0;left:0;width:350px;height:100%}#kuus-wrap{position:absolute;border:1px solid #f7f7f7;background:#fff;-webkit-box-shadow:0 16px 28px 0 rgba(0,0,0,.22),0 25px 55px 0 rgba(0,0,0,.21);box-shadow:0 16px 28px 0 rgba(0,0,0,.22),0 25px 55px 0 rgba(0,0,0,.21)}#kuus-header{z-index:1;position:relative;height:30px;border-bottom:1px solid #f7f7f7;background:#ededed;cursor:move;cursor:drag;cursor:grabbing;cursor:-webkit-grabbing;cursor:-moz-grabbing}#kuus-title{float:none;margin:0;padding:5px;line-height:20px;border:0;white-space:nowrap;overflow:hidden;color:#666;text-overflow:ellipsis;text-align:left;text-transform:uppercase;font-family:"Lucida Grande","Lucida Sans Unicode","Lucida Sans",Garuda,Verdana,Tahoma,sans-serif;font-size:13px;font-weight:100;letter-spacing:0}#kuus-controls{float:right}#kuus-container{position:absolute;top:30px;bottom:0;left:0;right:0;width:100%}#kuus-iframe-wrap{position:relative}#kuus-iframe-app{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%}#kuus-iframe-overlay{display:none;position:absolute;opacity:0}.kuus-cover{top:0;left:0;width:100%;height:100%}.kuus-control{display:block;float:right;width:30px;height:29px;line-height:30px;background:#ededed;color:#666;text-align:center;font-size:16px;font-family:"Lucida Grande","Lucida Sans Unicode","Lucida Sans",Garuda,Verdana,Tahoma,sans-serif;font-weight:100;cursor:pointer}.kuus-control:hover{background:#fcfcfc;color:#444}';
-  var injectableApp = '<!doctype html><html><head><style>body{margin:0;padding:0;font:13px/1.3 "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Garuda,Verdana,Tahoma,sans-serif}.cover,#iframe-wrapper{top:0;left:0;width:100%;height:100%}#iframe-wrapper{position:absolute;padding:5px;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box}#iframe-wrap{position:relative}#iframe-overlay-trap{display:none;position:absolute;opacity:0}#iframe{visibility:visible;position:absolute;padding:0;margin:0}</style><title>Word reference</title></head><body><div id="iframe-wrapper"><div id="iframe-wrap" class="cover"><iframe id="iframe" class="cover" frameborder="0" src="http://wordreference.com/" seamless="" sandbox="allow-forms"></iframe></div></div><script>!function(e,n){function t(){if(f.getSelection){var e=f.getSelection();return e.toString()}if(s.selection.createRange){var e=s.selection.createRange();return e.text}}function r(){l(s).on("mouseup",function(){var e=o(t());e&&e!==d&&c(e)<=2&&(i(e),d=e)})}function o(e){return e.replace(/^\\s\\s*/,"").replace(/\\s\\s*$/,"")}function c(e){return e.match(/\\S+/g).length}function i(e){var n=a.src,t=n.substr(n.lastIndexOf("/")+1),r=t?n.substring(n.lastIndexOf(g)+1,n.lastIndexOf(t)-t.length):"enit";console.log("http://wordreference.com/"+r+"/"+encodeURIComponent(e))}function u(){a=n.getElementById("iframe"),r()}var a,f=e.parent,s=e.parent.document,l=f.jQuery,g="http://wordreference.com/",d="";u()}(window,document);</script></body></html>';
+  var injectableTemplates = '<div id="kuus-cage"></div><div id="kuus-wrapper" class="kuus-cover"><div id="kuus-header"><div id="kuus-controls"><span id="kuus-control-close" class="kuus-control">&times;</span> <span id="kuus-control-toggle" class="kuus-control-toggle kuus-control-toggle-open kuus-control"></span></div><h1 id="kuus-title">Bookmarklet</h1></div><div id="kuus-container"><div id="kuus-iframe-wrap" class="kuus-cover"><iframe id="kuus-iframe-app" name="kuus-iframe-app" src="javascript:false;" scrolling="0" frameborder="0" sandbox="allow-scripts allow-same-origin" seamless=""></iframe><div id="kuus-iframe-overlay" class="kuus-cover"></div></div></div></div>';
+  var injectableStyles = '#kuus-cage{z-index:-1;position:fixed;top:0;left:0;bottom:0;right:0;pointer-events:none}#kuus-wrapper{z-index:9999999999;position:fixed!important;top:0;left:0;width:350px;height:100%;-webkit-transition:opacity .3s ease;transition:opacity .3s ease;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;border:1px solid #b3b3b3!important;background:#fff;-webkit-box-shadow:0 16px 28px 0 rgba(0,0,0,.22),0 25px 55px 0 rgba(0,0,0,.21);box-shadow:0 16px 28px 0 rgba(0,0,0,.22),0 25px 55px 0 rgba(0,0,0,.21)}#kuus-header{z-index:1;position:relative;height:30px;border-bottom:1px solid #e0e0e0;background:#ededed;-webkit-box-shadow:0 0 10px rgba(0,0,0,.04);box-shadow:0 0 10px rgba(0,0,0,.04);cursor:move;cursor:drag;cursor:grabbing;cursor:-webkit-grabbing;cursor:-moz-grabbing}#kuus-title{float:none;margin:0;padding:5px;line-height:20px;border:0;white-space:nowrap;overflow:hidden;color:#666;text-overflow:ellipsis;text-align:left;text-transform:uppercase;font-family:"Open Sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Garuda,Verdana,Tahoma,sans-serif!important;font-size:13px;font-weight:100;letter-spacing:0}#kuus-controls{float:right}#kuus-container{position:absolute;top:30px;bottom:0;left:0;width:100%}#kuus-iframe-wrap{position:relative}#kuus-iframe-app{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;border:0!important;padding:0!important;max-width:none!important}#kuus-iframe-overlay{display:none;position:absolute;opacity:0}.kuus-cover{top:0;left:0;width:100%;height:100%}.kuus-control{display:block;float:right;width:30px;height:29px;line-height:30px;background:#ededed;color:#666;text-align:center;font-size:16px;font-family:"Open Sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Garuda,Verdana,Tahoma,sans-serif!important;font-weight:100;cursor:pointer}.kuus-control:hover{z-index:1;position:relative;background:#f0f0f0;color:#444;-webkit-box-shadow:0 0 30px rgba(0,0,0,.1);box-shadow:0 0 30px rgba(0,0,0,.1)}.kuus-control-toggle:before{content:"\\002B"}.kuus-control-toggle-open:before{content:"\\002D"}.ui-resizable,.ui-resizable-se{border:0!important}';
+  var injectableApp = '<!doctype html><html><head><style>html{height:100%}body{margin:0;padding:0;font:13px/1.3 "Open Sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Garuda,Verdana,Tahoma,sans-serif;text-align:center;color:#999}body,body:before{height:100%;vertical-align:middle}body:before{content:\'\';display:inline-block}h1{font-weight:100}a{text-decoration:none;color:#666;letter-spacing:0;-webkit-transition:letter-spacing .2s ease;transition:letter-spacing .2s ease}a:active,a:hover{text-decoration:underline;letter-spacing:3px;color:#666}.content{vertical-align:middle;display:inline-block}</style><link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300"><title>Example app</title></head><body><div class="content"><h1>Just a sample app</h1><img src="http://yeoman.io/assets/img/yeoman-003.29e3.png" width="200"><p>built by <a href="https://github.com/kuus">kuus</a></p></div><script>!function(o){var n=o.parent;o.parent.document,n.jQuery,console.log("ciao from your bookmarklet app")}(window);</script></body></html>';
 
   /**
    * Load jQuery
    * Adapted from here: http://stackoverflow.com/questions/10113366/load-jquery-with-javascript-and-use-jquery
-   * @param  {String} url of jquery, as absolute path
-   * @param  {Function} callback on jquery ready
-   * @return {void}
+   * @param {string} url of jquery, as absolute path
+   * @param {Function} callback on jquery ready
    */
   function loadJquery(url, onReady) {
     // regex to get only number comman and dots
@@ -109,9 +117,8 @@
 
   /**
    * Load js files, use jquery
-   * @param  {Array} paths of js files
-   * @param  {Function} callback called when all scripts are loaded
-   * @return {void}
+   * @param {Array} paths of js files
+   * @param {Function} callback called when all scripts are loaded
    */
   function loadScripts(paths, callback) {
     var received = 0;
@@ -129,8 +136,7 @@
 
   /**
    * Load css files
-   * @param  {Array} paths of css files
-   * @return {void}
+   * @param {Array} paths of css files
    */
   function loadStyles(paths, callback) {
     var head = document.getElementsByTagName('head')[0];
@@ -146,8 +152,7 @@
   /**
    * Inject css rules
    * as seen here: http://stackoverflow.com/a/524721
-   * @param  {String} css as a string
-   * @return {void}
+   * @param {string} css as a string
    */
   function injectCss(css) {
     var head = document.head || document.getElementsByTagName('head')[0],
@@ -165,8 +170,7 @@
    * Prevent the default behavior of passing
    * the scroll event to parent scrollable areas.
    * Adapted from: http://stackoverflow.com/a/16324762
-   * @param  {Object} event
-   * @return {void}
+   * @param {Object} event
    */
   function preventScrollBubbling(event) {
     var scrollTop = this.scrollTop,
@@ -193,12 +197,15 @@
     }
   }
 
-  var myBookmarklet = function myBookmarklet() {
+  var Bookmarklet = function Bookmarklet() {
     this.initialize.apply(this, arguments);
   };
 
-  // Prototype
-  myBookmarklet.prototype = {
+  /**
+   * The bookmarklet prototype
+   * @type {Object}
+   */
+  Bookmarklet.prototype = {
 
     initialize: function() {
       var self = this;
@@ -286,6 +293,7 @@
         containment: '#' + cageId,
         maxWidth: 768,
         minWidth: minWidth,
+        minHeight: header.offsetHeight,
         handles: 'all',
         snap: '#' + cageId,
         snapTolerance: 20,
@@ -297,21 +305,21 @@
       .on('DOMMouseScroll mousewheel', preventScrollBubbling);
     },
     bindControls: function() {
-      var self = this;
-      $(controlClose).on('click', self.destroy);
-      $(controlToggle).on('click', self.toggle);
-      $(header).on('dblclick', self.toggle);
+      $(controlClose).on('click', $.proxy(this.destroy, this));
+      $(controlToggle).on('click', $.proxy(this.toggle, this));
+      $(header).on('dblclick', $.proxy(this.toggle, this));
     },
-    toggle: function() {
+    toggle: function(event) {
+      var $element = $(event.target);
       if(this.minimized) {
         wrapper.style.width = this.size.width + 'px';
         wrapper.style.height = this.size.height + 'px';
-        this.className += ' kuus-control-open';
+        $element.addClass('kuus-control-toggle-open');
         this.minimized = false;
       } else {
         wrapper.style.height = header.offsetHeight + 'px';
         wrapper.style.width = DEFAULT_WIDTH + 'px';
-        this.className = 'kuus-control';
+        $element.removeClass('kuus-control-toggle-open');
         this.minimized = true;
       }
     },
@@ -323,6 +331,7 @@
     }
   };
 
-  window['kuus'] = new myBookmarklet();
+  // Expose the Bookmarklet
+  window['kuus'] = new Bookmarklet();
 
 })(window, document);

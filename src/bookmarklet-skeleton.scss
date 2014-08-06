@@ -1,15 +1,15 @@
-
 // Bookmarklet Variables
 // -------------------------
-$bookmarklet-font-family: "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Garuda,Verdana,Tahoma,sans-serif !default;
+$bookmarklet-font-family: "Open Sans","Lucida Grande","Lucida Sans Unicode","Lucida Sans",Garuda,Verdana,Tahoma,sans-serif !default;
 $bookmarklet-default-width: 350px !default;
 $bookmarklet-header-bg: #ededed !default;
+$bookmarklet-header-border-color: darken($bookmarklet-header-bg, 5%) !default;
 $bookmarklet-header-height: 30px !default;
 $bookmarklet-header-padding: 5px !default;
 $bookmarklet-bg: #fff !default;
-$bookmarklet-border-color: darken($bookmarklet-bg, 3%);
-$bookmarklet-control-bg: $bookmarklet-bg !default;
-$bookmarklet-control-bg-hover: darken($bookmarklet-bg, 1%) !default;
+$bookmarklet-border-color: darken($bookmarklet-bg, 30%);
+$bookmarklet-control-bg: $bookmarklet-header-bg !default;
+$bookmarklet-control-bg-hover: lighten($bookmarklet-control-bg, 1%) !default;
 $bookmarklet-control-color: #666 !default;
 $bookmarklet-control-color-hover: #444 !default;
 
@@ -34,11 +34,10 @@ $bookmarklet-control-color-hover: #444 !default;
     left: 0;
     width: $bookmarklet-default-width;
     height: 100%;
-  }
-
-  &-wrap {
+    transition: opacity .3s ease;
+    box-sizing: border-box;
     position: absolute;
-    border: 1px solid $bookmarklet-border-color;
+    border: 1px solid $bookmarklet-border-color !important; // becasue of the important in the bottom, needed...
     background: $bookmarklet-bg;
     box-shadow: 0 16px 28px 0 rgba(0, 0, 0, 0.22), 0 25px 55px 0 rgba(0, 0, 0, 0.21);
   }
@@ -47,8 +46,9 @@ $bookmarklet-control-color-hover: #444 !default;
     z-index: 1;
     position: relative;
     height: $bookmarklet-header-height;
-    border-bottom: 1px solid $bookmarklet-border-color;
+    border-bottom: 1px solid $bookmarklet-header-border-color;
     background: $bookmarklet-header-bg;
+    box-shadow: 0 0 10px rgba(0,0,0,.04);
     cursor: move;
     cursor: drag;
     cursor: grabbing;
@@ -68,7 +68,7 @@ $bookmarklet-control-color-hover: #444 !default;
     text-overflow: ellipsis;
     text-align: left;
     text-transform: uppercase;
-    font-family: $bookmarklet-font-family;
+    font-family: $bookmarklet-font-family !important;
     font-size: 13px;
     font-weight: 100;
     letter-spacing: 0;
@@ -83,7 +83,6 @@ $bookmarklet-control-color-hover: #444 !default;
     top: $bookmarklet-header-height;
     bottom: 0;
     left: 0;
-    right: 0;
     width: 100%;
   }
 
@@ -103,6 +102,9 @@ $bookmarklet-control-color-hover: #444 !default;
       left: 0;
       width: 100%;
       height: 100%;
+      border: 0 !important;
+      padding: 0 !important;
+      max-width: none !important;
     }
 
     &-overlay {
@@ -134,13 +136,34 @@ $bookmarklet-control-color-hover: #444 !default;
     color: $bookmarklet-control-color;
     text-align: center;
     font-size: 16px;
-    font-family: $bookmarklet-font-family;
+    font-family: $bookmarklet-font-family !important;
     font-weight: 100;
     cursor: pointer;
 
     &:hover {
+      z-index: 1;
+      position: relative;
       background: $bookmarklet-control-bg-hover;
       color: $bookmarklet-control-color-hover;
+      box-shadow: 0 0 30px rgba(0,0,0,.1);
+    }
+
+    &-toggle {
+      &:before {
+        content: "\002B";
+      }
+
+      &-open:before {
+        content: "\002D";
+      }
     }
   }
+}
+
+// jQuery ui overrides
+// in some websites they are changed, let's reset them
+// -------------------------
+.ui-resizable,
+.ui-resizable-se {
+  border: 0 !important;
 }
