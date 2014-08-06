@@ -1,7 +1,7 @@
 {
   "name": "bookmarklet-seed",
   "version": "0.0.1",
-  "description": "Seed for bookmarklet",
+  "description": "Seed to easily start and develop a draggable and resizable bookmarklet.",
   "homepage": "http://github.com/kuus/bookmarklet-seed",
   "author": "kuus <kunderikuus@gmail.com> (http://github.com/kuus/)",
   "license": "MIT",

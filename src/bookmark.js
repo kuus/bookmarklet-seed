@@ -1,5 +1,5 @@
 /**
- * Bookmarklet skeleton
+ * Bookmarklet seed
  *
  * @author kuus <kunderikuus@gmail.com> (http://kunderikuus.net)
  */
@@ -19,7 +19,6 @@
     js: [
       '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js',
       '//rawgit.com/polomoshnov/jQuery-UI-Resizable-Snap-extension/master/jquery.ui.resizable.snap.ext.v1.9.min.js'
-      // '//rawgit.com/briangonzalez/jquery.pep.js/master/src/jquery.pep.js',
     ],
     css: [
       '//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css'
@@ -34,7 +33,6 @@
   /**
    * DOM variables, id and elements
    */
-  var html;
   var all;
   var allId = UNIQUE_PREFIX;
   var cage;
@@ -47,6 +45,8 @@
   var iframeAppOverlayId = UNIQUE_PREFIX + '-iframe-overlay';
   var header;
   var headerId = UNIQUE_PREFIX + '-header';
+  var title;
+  var titleId = UNIQUE_PREFIX + '-title';
   var controlClose;
   var controlCloseId = UNIQUE_PREFIX + '-control-close';
   var controlToggle;
@@ -213,13 +213,15 @@
       };
       this.active = false;
       this.createDom();
-      this.assignDom();
       loadJquery(DEPENDENCIES.jquery.desired, function() {
         injectCss(injectableStyles);
         loadStyles(DEPENDENCIES.css);
+        // here so we have jquery
+        self.bindControls();
+        // and the inner app also gets it
+        self.initInnerApp();
         loadScripts(DEPENDENCIES.js, function() {
           self.initDrag();
-          self.bindControls();
         })
       });
     },
@@ -230,26 +232,36 @@
       all.innerHTML = injectableTemplates;
       fragment.appendChild(all);
       document.body.appendChild(fragment);
+      this.assignDom();
+    },
+    assignDom: function() {
+      wrapper = document.getElementById(wrapperId);
+      iframeAppOverlay = document.getElementById(iframeAppOverlayId);
+      header = document.getElementById(headerId);
+      title = document.getElementById(titleId);
+      controlClose = document.getElementById(controlCloseId);
+      controlToggle = document.getElementById(controlToggleId);
       iframeApp = document.getElementById(iframeAppId);
+    },
+    initInnerApp: function() {
+      var self = this;
       //http://stackoverflow.com/questions/10418644/creating-an-iframe-with-given-html-dynamically
       // iframeApp.src = "data:text/html;charset=utf-8," + escape(injectableApp);
       iframeApp.contentWindow.document.open();
       iframeApp.contentWindow.document.write(injectableApp);
       iframeApp.contentWindow.document.close();
+      iframeApp.onload = function() {
+        self.setTitle(iframeApp.contentDocument.title);
+      }
     },
-    assignDom: function() {
-      // find dom elements
-      html = document.getElementsByTagName('html')[0];
-      wrapper = document.getElementById(wrapperId);
-      iframeAppOverlay = document.getElementById(iframeAppOverlayId);
-      header = document.getElementById(headerId);
-      controlClose = document.getElementById(controlCloseId);
-      controlToggle = document.getElementById(controlToggleId);
+    setTitle: function(str) {
+      title.innerHTML = str;
     },
     initDrag: function() {
       var self = this,
         minWidth = this.size.width,
         onStart = function() {
+          // cover iframe
           iframeAppOverlay.style.display = 'block';
         },
         onStop = function(event, ui) {
@@ -257,11 +269,8 @@
           self.size = ui.size ? ui.size : self.size;
           // uncover iframe
           iframeAppOverlay.style.display = 'none';
-        },
-        onDrag = function(event, ui) {
-          console.log(ui);
         };
-      // Draggable: jquery ui
+      // draggable: jquery ui
       $(wrapper).draggable({
         containment: '#' + cageId,
         scroll: false,
@@ -270,10 +279,9 @@
         snapMode: 'inner',
         opacity: 0.8,
         start: onStart,
-        stop: onStop,
-        drag: onDrag
+        stop: onStop
       })
-      // Resizable: jquery ui
+      // resizable: jquery ui
       .resizable({
         containment: '#' + cageId,
         maxWidth: 768,
@@ -283,31 +291,19 @@
         snapTolerance: 20,
         snapMode: 'inner',
         start: onStart,
-        stop: onStop,
-        resize: onDrag
+        stop: onStop
       })
-      // Prevent scroll bubbling to parent document
+      // prevent scroll bubbling to parent document
       .on('DOMMouseScroll mousewheel', preventScrollBubbling);
-      html.style.position = 'relative';
-      html.style.marginLeft = minWidth + 'px';
     },
     bindControls: function() {
       var self = this;
-      $(controlClose).on('click', function() {
-        self.destroy();
-      });
-      $(controlToggle).on('click', function() {
-        self.toggle();
-      });
-      $(header).on('dblclick', function() {
-        self.toggle();
-      });
+      $(controlClose).on('click', self.destroy);
+      $(controlToggle).on('click', self.toggle);
+      $(header).on('dblclick', self.toggle);
     },
     toggle: function() {
-      // var self = this;
       if(this.minimized) {
-        // wrapper.style.top = this.position.top + 'px';
-        // wrapper.style.left = this.position.left + 'px';
         wrapper.style.width = this.size.width + 'px';
         wrapper.style.height = this.size.height + 'px';
         this.className += ' UNIQUEID-control-open';
@@ -315,8 +311,6 @@
       } else {
         wrapper.style.height = header.offsetHeight + 'px';
         wrapper.style.width = DEFAULT_WIDTH + 'px';
-        // wrapper.style.top = 0;
-        // wrapper.style.left = 0;
         this.className = 'UNIQUEID-control';
         this.minimized = true;
       }

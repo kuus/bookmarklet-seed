@@ -1,3 +1,5 @@
+// it should be unique enough, and it has to be a valid js variable name,
+// so probably in camelCase, no dashes, no spaces, no dots, etc.
 var UNIQUEID = 'kuus';
 
 var gulp = require('gulp');

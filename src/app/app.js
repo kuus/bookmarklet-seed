@@ -1,69 +1,90 @@
-/**
- * Bookmarklet skeleton
- *
- * @author kuus <kunderikuus@gmail.com> (http://kunderikuus.net)
- */
-(function() {
-  console.log('Inside iframe, appjs', window.parent)
+(function(window, document) {
 
-  // dom elements
-  var elSelectedWord,
-    elIframe;
-
-  // other variables
-  var lastTermSearched = '';
+  // useful vars who access parent page
   var windowParent = window.parent
   var documentParent = window.parent.document;
+  var $ = windowParent.jQuery;
+
+  // dom elements
+  var elIframe;
+
+  // other variables
+  var IFRAME_BASE_URL = 'http://wordreference.com/';
+  var lastTermSearched = '';
 
   /**
    * Get selected text
-   *
-   * @return {String} The selected text
+   * @return {String} the selected text
    */
   function getSelectedText() {
-    if (windowParent.getSelection) { // all browsers, except IE before version 9
+    if (windowParent.getSelection) {
+      // all browsers, except IE before version 9
       var range = windowParent.getSelection();
       return range.toString();
     } else {
-      if (documentParent.selection.createRange) { // Internet Explorer
+      // Internet Explorer
+      if (documentParent.selection.createRange) {
         var range = documentParent.selection.createRange();
         return range.text;
       }
     }
   }
 
+  /**
+   * Listen to user text selections on page
+   * @return {void}
+   */
   function listenSelections() {
-    documentParent.addEventListener('mouseup', function() {
+    $(documentParent).on('mouseup', function() {
       var text = trim(getSelectedText());
-      if (text && text !== lastTermSearched) {
-        if(countWhitespaces(text) > 2) {
-          return;
-        }
-        elSelectedWord.innerHTML = text;
+      if (text && text !== lastTermSearched && countWhitespaces(text) <= 2) {
         search(text);
         lastTermSearched = text;
       }
-    }, false);
+    });
   }
 
+  /**
+   * Trime whitespace beginning/end of a string
+   * @param  {String} string to trim
+   * @return {String} trimmed string
+   */
   function trim (str) {
     return str.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
   }
 
+  /**
+   * Count number of whitespaces in a string
+   * @param  {String} string to analyze
+   * @return {Int} number of whitespaces
+   */
   function countWhitespaces (str) {
     return str.match(/\S+/g).length;
   }
 
+  /**
+   * Search the selected text changing the
+   * iframe search query parameter
+   * @param  {String} query to look for
+   * @return {void}
+   */
   function search(query) {
-    elIframe.src = 'http://wordreference.com/enit/' + encodeURIComponent(query);
+    var lastSrc = elIframe.src;
+    var lastSearch = lastSrc.substr(lastSrc.lastIndexOf('/') + 1);
+    var language = lastSearch ? lastSrc.substring(lastSrc.lastIndexOf(IFRAME_BASE_URL) + 1, lastSrc.lastIndexOf(lastSearch) - lastSearch.length) : 'enit';
+    console.log('http://wordreference.com/' + language + '/' + encodeURIComponent(query))
+    // elIframe.src = 'http://wordreference.com/' + language + '/' + encodeURIComponent(query);
   }
 
+  /**
+   * Init the sample app
+   * @return {void}
+   */
   function init() {
     elIframe = document.getElementById('iframe');
-    elSelectedWord = document.getElementsByClassName('selected-text')[0];
     listenSelections();
   }
 
   init();
 
-})();
+})(window, document);
