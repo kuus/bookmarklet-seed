@@ -1,3 +1,11 @@
+/**
+ * bookmarklet-seed
+ * http://github.com/kuus/bookmarklet-seed
+ *
+ * Copyright (c) 2014 kuus <kunderikuus@gmail.com> (http://github.com/kuus/)
+ * Released under MIT License
+ */
+
 // it should be unique enough, and it has to be a valid js variable name,
 // so probably in camelCase, no dashes, no spaces, no dots, etc.
 var UNIQUEID = 'kuusbkmrkletsd';
@@ -88,17 +96,17 @@ gulp.task('assemble', ['minify'], function() {
     .pipe(replace(injectTagApp, jsesc(app)))
     .pipe(replace('UNIQUEID', UNIQUEID))
     .pipe(header(CREDITS.join('\n'), { pkg: pkg }))
-    .pipe(gulp.dest('./'))
+    .pipe(gulp.dest('./dist'))
     // create also a minified version
     .pipe(uglify())
     .pipe(rename(pkg.name + '.min.js'))
     .pipe(header(CREDITS.join('\n'), { pkg: pkg }))
-    .pipe(gulp.dest('./'))
+    .pipe(gulp.dest('./dist'))
     // and also a file ready to be copy-pasted in a new bookmarklet
     .pipe(uglify())
     .pipe(rename(pkg.name + '.url.js'))
     .pipe(header('javascript:'))
-    .pipe(gulp.dest('./'))
+    .pipe(gulp.dest('./dist'))
 });
 
 function browserSyncInit(startPath, baseDir, files) {
@@ -113,12 +121,12 @@ function browserSyncInit(startPath, baseDir, files) {
 }
 
 gulp.task('browser-sync', function() {
-  browserSyncInit('/', [
+  return browserSyncInit('/', [
     '',
     '.tmp'
   ], [
     './index.html',
-    './*.js',
+    './dist/*.js',
   ]);
 });
 
