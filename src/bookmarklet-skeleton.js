@@ -1,7 +1,9 @@
 /**
- * Bookmarklet seed
+ * bookmarklet-seed
+ * http://github.com/kuus/bookmarklet-seed
  *
- * @author kuus <kunderikuus@gmail.com> (http://kunderikuus.net)
+ * Copyright (c) 2014 kuus <kunderikuus@gmail.com> (http://github.com/kuus/)
+ * Released under MIT License
  */
 
 (function(window, document, undefined) {
