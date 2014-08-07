@@ -4,7 +4,7 @@ Bookmarklet seed
 Seed to easily start and develop a draggable and resizable bookmarklet. Using gulp to help the workflow.
 Check out the [demo page](http://kuus.github.io/bookmarklet-seed/)
 
-What
+Description
 -------
 Your app is contained in `src/app/`. It will be inside a sourceless iframe inside a bookmarklet skeleton.
 The skeleton provides a draggable and resizable container with a small header where you see the name of your app (took from the '<title>' tag of your app, a toggle and close control). Everytime a file changes gulp will output in the `dist` folder the complete bookmarklet. The file named `packagename.url.js` is ready to be copy pasted in your bookmark bar.
