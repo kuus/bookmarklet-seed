@@ -14,22 +14,20 @@ By default the bookmarklet skeleton requires jquery and jquery ui.
 Get started
 -------
 
-```
+```shell
 git clone https://github.com/kuus/bookmarklet-seed.git <project-name>
 cd <project-name>
 npm install
 gulp
+# do `gulp --open` to open a tab in the browser automatically at http://localhost:3000/
 ```
-
-*a tab in your browser is automatically opened at http://localhost:3000/*
-
 
 First steps
 -------
 
 Before actually starting a project you should edit the package.json file with your info (the package name will be use as the name of the js files which will be generated in the dist folder). Therefore you need to change also the script included in the `index.html`: `<script src="./dist/bookmarklet-seed.js"></script>`.
 
-After this you should change the `UNIQUEID` variable in the begininng of the `gulpfile.js`. Remember that is has to be a valid javascript variable name.
+After this you should change the `UNIQUEID` variable in the begininng of the `gulpfile.js`. Remember that is has to be a valid javascript variable name (also valid with dot notation).
 
 Now browse to `src/app` and do what you want.
 

@@ -6,7 +6,9 @@
  * Released under MIT License
  */
 
-(function(window, document, undefined) {
+(function (window, document, undefined) {
+
+  'use strict';
 
   /**
    * Constants, list jquery, js and css dependencies
@@ -37,7 +39,6 @@
    */
   var all;
   var allId = UNIQUE_PREFIX;
-  var cage;
   var cageId = UNIQUE_PREFIX + '-cage';
   var wrapper;
   var wrapperId = UNIQUE_PREFIX + '-wrapper';
@@ -68,7 +69,7 @@
    * @param {string} url of jquery, as absolute path
    * @param {Function} callback on jquery ready
    */
-  function loadJquery(url, onReady) {
+  function loadJquery (url, onReady) {
     // regex to get only number comman and dots
     // ^[0-9]{1,2}([,.][0-9]{1,2})?$
     // get jquery version
@@ -76,20 +77,20 @@
 
     if (typeof window.jQuery == 'undefined') {
       // Poll for jQuery to come into existance
-      var checkReady = function() {
+      var checkReady = function () {
         if (window.jQuery) {
           $ = window.jQuery;
           onReady();
         } else {
-          window.setTimeout(function() {
+          window.setTimeout(function () {
             checkReady();
           }, 100);
         }
       };
-      var script = document.createElement('script')
+      var script = document.createElement('script');
       script.type = 'text/javascript';
       if (script.readyState) { // IE
-        script.onreadystatechange = function() {
+        script.onreadystatechange = function () {
           if (script.readyState == 'loaded' || script.readyState == 'complete') {
             script.onreadystatechange = null;
             checkReady();
@@ -113,7 +114,7 @@
    * @param {Array} paths of js files
    * @param {Function} callback called when all scripts are loaded
    */
-  function loadScripts(paths, callback) {
+  function loadScripts (paths, callback) {
     var received = 0;
     var pathsLength = paths.length;
     var realCallback = function() {
@@ -131,7 +132,7 @@
    * Load css files
    * @param {Array} paths of css files
    */
-  function loadStyles(paths, callback) {
+  function loadStyles (paths) {
     var head = document.getElementsByTagName('head')[0];
     for (var i = 0, l = paths.length; i < l; i++) {
       var link = document.createElement('link');
@@ -147,7 +148,7 @@
    * as seen here: http://stackoverflow.com/a/524721
    * @param {string} css as a string
    */
-  function injectCss(css) {
+  function injectCss (css) {
     var head = document.head || document.getElementsByTagName('head')[0],
       style = document.createElement('style');
     style.type = 'text/css';
@@ -165,10 +166,10 @@
    * Adapted from: http://stackoverflow.com/a/16324762
    * @param {Object} event
    */
-  function preventScrollBubbling(event) {
-    var scrollTop = this.scrollTop,
-      scrollHeight = this.scrollHeight,
-      height = this.offsetHeight,
+  function preventScrollBubbling (event, element) {
+    var scrollTop = element.scrollTop,
+      scrollHeight = element.scrollHeight,
+      height = element.offsetHeight,
       delta = event.originalEvent.wheelDelta,
       up = delta > 0;
 
@@ -177,20 +178,20 @@
       event.preventDefault();
       event.returnValue = false;
       return false;
-    }
+    };
 
     if (!up && -delta > scrollHeight - height - scrollTop) {
       // Scrolling down, but this will take us past the bottom.
-      this.scrollTop = scrollHeight;
+      element.scrollTop = scrollHeight;
       return prevent();
     } else if (up && delta > scrollTop) {
       // Scrolling up, but this will take us past the top.
-      this.scrollTop = 0;
+      element.scrollTop = 0;
       return prevent();
     }
   }
 
-  var Bookmarklet = function Bookmarklet() {
+  var Bookmarklet = function Bookmarklet () {
     this.initialize.apply(this, arguments);
   };
 
@@ -200,7 +201,7 @@
    */
   Bookmarklet.prototype = {
 
-    initialize: function() {
+    initialize: function () {
       var self = this;
       this.active = true;
       this.position = {
@@ -213,19 +214,19 @@
       };
       this.active = false;
       this.createDom();
-      loadJquery(DEPENDENCIES.jquery.desired, function() {
+      loadJquery(DEPENDENCIES.jquery.desired, function () {
         injectCss(injectableStyles);
         loadStyles(DEPENDENCIES.css);
         // here so we have jquery
         self.bindControls();
         // and the inner app also gets it
         self.initInnerApp();
-        loadScripts(DEPENDENCIES.js, function() {
+        loadScripts(DEPENDENCIES.js, function () {
           self.initDrag();
-        })
+        });
       });
     },
-    createDom: function() {
+    createDom: function () {
       var fragment = document.createDocumentFragment();
       all = document.createElement('div');
       all.id = allId;
@@ -234,7 +235,7 @@
       document.body.appendChild(fragment);
       this.assignDom();
     },
-    assignDom: function() {
+    assignDom: function () {
       wrapper = document.getElementById(wrapperId);
       iframeAppOverlay = document.getElementById(iframeAppOverlayId);
       header = document.getElementById(headerId);
@@ -243,28 +244,28 @@
       controlToggle = document.getElementById(controlToggleId);
       iframeApp = document.getElementById(iframeAppId);
     },
-    initInnerApp: function() {
+    initInnerApp: function () {
       var self = this;
       //http://stackoverflow.com/questions/10418644/creating-an-iframe-with-given-html-dynamically
       // iframeApp.src = "data:text/html;charset=utf-8," + escape(injectableApp);
       iframeApp.contentWindow.document.open();
       iframeApp.contentWindow.document.write(injectableApp);
       iframeApp.contentWindow.document.close();
-      iframeApp.onload = function() {
+      iframeApp.onload = function () {
         self.setTitle(iframeApp.contentDocument.title);
-      }
+      };
     },
-    setTitle: function(str) {
+    setTitle: function (str) {
       title.innerHTML = str;
     },
-    initDrag: function() {
+    initDrag: function () {
       var self = this,
         minWidth = this.size.width,
-        onStart = function() {
+        onStart = function () {
           // cover iframe
           iframeAppOverlay.style.display = 'block';
         },
-        onStop = function(event, ui) {
+        onStop = function (event, ui) {
           self.position = ui.position;
           self.size = ui.size ? ui.size : self.size;
           // uncover iframe
@@ -295,14 +296,16 @@
         stop: onStop
       })
       // prevent scroll bubbling to parent document
-      .on('DOMMouseScroll mousewheel', preventScrollBubbling);
+      .on('DOMMouseScroll mousewheel', function (event) {
+        preventScrollBubbling(event, this);
+      });
     },
-    bindControls: function() {
+    bindControls: function () {
       $(controlClose).on('click', $.proxy(this.destroy, this));
       $(controlToggle).on('click', $.proxy(this.toggle, this));
       $(header).on('dblclick', $.proxy(this.toggle, this));
     },
-    toggle: function(event) {
+    toggle: function (event) {
       var $element = $(event.target);
       if(this.minimized) {
         wrapper.style.width = this.size.width + 'px';
@@ -316,15 +319,15 @@
         this.minimized = true;
       }
     },
-    destroy: function() {
+    destroy: function () {
       this.active = false;
       all.parentNode.removeChild(all);
-      window['UNIQUEID'] = {};
-      delete window['UNIQUEID'];
+      window.UNIQUEID = {};
+      delete window.UNIQUEID;
     }
   };
 
   // Expose the Bookmarklet
-  window['UNIQUEID'] = new Bookmarklet();
+  window.UNIQUEID = new Bookmarklet();
 
 })(window, document);

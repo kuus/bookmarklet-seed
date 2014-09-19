@@ -6,8 +6,10 @@
  * Released under MIT License
  */
 
-// it should be unique enough, and it has to be a valid js variable name,
-// so probably in camelCase, no dashes, no spaces, no dots, etc.
+'use strict';
+
+// it should be unique enough, and it has to be a valid js variable name (with dot notation),
+// so no dashes, no spaces, no dots, etc.
 var UNIQUEID = 'kuusbkmrkletsd';
 
 var CREDITS = [
@@ -24,6 +26,7 @@ var CREDITS = [
 ];
 
 var gulp = require('gulp');
+var argv = require('minimist')(process.argv.slice(2));
 var notify = require('gulp-notify');
 var minifyHtml = require('gulp-minify-html');
 var sass = require('gulp-sass');
@@ -49,27 +52,24 @@ gulp.task('watch', function() {
 gulp.task('styles', function() {
   return gulp.src('./src/**/*.scss')
     .pipe(sass({
-      onError: function(error) {
-        notify({
-          title: 'Compile Error',
-          message: '<%= error.message %>'
-        })
+      onError: function (error) {
+        return notify().write(error);
       }
     }))
     .pipe(minifyCss())
     .pipe(autoprefixer())
-    .pipe(gulp.dest('./.tmp'))
+    .pipe(gulp.dest('./.tmp'));
 });
 
 gulp.task('scripts', function() {
   return gulp.src('./src/**/*.js')
     .pipe(uglify())
-    .pipe(gulp.dest('./.tmp'))
+    .pipe(gulp.dest('./.tmp'));
 });
 
 gulp.task('templates', function() {
   return gulp.src('./src/**/*.html')
-    .pipe(gulp.dest('./.tmp'))
+    .pipe(gulp.dest('./.tmp'));
 });
 
 gulp.task('inline', ['styles', 'scripts', 'templates'], function() {
@@ -81,8 +81,8 @@ gulp.task('inline', ['styles', 'scripts', 'templates'], function() {
 gulp.task('minify', ['inline'], function() {
   return gulp.src('./.tmp/**/*.html')
     .pipe(minifyHtml({ empty: true, spare: true, quotes: true }))
-    .pipe(gulp.dest('./.tmp'))
-})
+    .pipe(gulp.dest('./.tmp'));
+});
 
 gulp.task('assemble', ['minify'], function() {
   var template = fs.readFileSync('./.tmp/bookmarklet-skeleton.html', 'utf8');
@@ -106,13 +106,13 @@ gulp.task('assemble', ['minify'], function() {
     .pipe(uglify())
     .pipe(rename(pkg.name + '.url.js'))
     .pipe(header('javascript:'))
-    .pipe(gulp.dest('./dist'))
+    .pipe(gulp.dest('./dist'));
 });
 
 function browserSyncInit(startPath, baseDir, files) {
   browserSync.init(files, {
     notify: false,
-    open: true,
+    open: !!argv.open,
     startPath: startPath,
     server: {
       baseDir: baseDir
