@@ -31,7 +31,7 @@
     },
     js: [
       '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js',
-      '//rawgit.com/polomoshnov/jQuery-UI-Resizable-Snap-extension/master/jquery.ui.resizable.snap.ext.v1.9.min.js'
+      '//rawgit.com/polomoshnov/jQuery-UI-Resizable-Snap-extension/master/jquery.ui.resizable.snap.ext.js'
     ],
     css: [
       '//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css'
